@@ -1,0 +1,28 @@
+{
+    "name": "zeroshotlabs/php_mqueue",
+    "description": "Speed-optimized PHP FFI bindings for POSIX message queues",
+    "keywords": ["mqueue", "message queue", "posix", "ffi", "binding", "pmq"],
+    "license": "gpl-3.0-or-later",
+    "homepage": "https://zsl.ai",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Zero Shot Labs, Inc.",
+            "email": "opensource@zsl.ai"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/zeroshotlabs/php_mqueue.git"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "ext-ffi": "*",
+        "zeroshotlabs/libphphi": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+
