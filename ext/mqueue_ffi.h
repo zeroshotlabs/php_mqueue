@@ -1,12 +1,12 @@
 #define FFI_SCOPE "MQUEUE_FFI"
-#define FFI_LIB "./lib/php_mqueue.so"  // Full path to the shared library
+#define FFI_LIB __DIR__."/libphp_mqueue.so"  // Full path to the shared library "/lib/php_mqueue.so"
 // #define FFI_LIB "librt.so.1"
 
 #define _GNU_SOURCE
 
 typedef int mqd_t;
 typedef unsigned int mode_t;
-typedef long long ssize_t;
+typedef long int ssize_t;
 typedef unsigned long size_t;
 
 typedef struct mq_attr mq_attr;
@@ -27,7 +27,14 @@ int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_p
 #define O_NONBLOCK 04000
 
 
+#ifndef MQUEUE_FFI_H
+#define MQUEUE_FFI_H
 
+#include <mqueue.h>    // Include POSIX message queue definitions
+
+#include "libphphi/ext/libphphi.h"  // Include libphphi functionality
+
+#endif  // MQUEUE_FFI_H
 
 
 

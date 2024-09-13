@@ -1,5 +1,9 @@
+#define FFI_SCOPE "MQUEUE_FFI"
+#define FFI_LIB __DIR__."/libphp_mqueue.so"  // Full path to the shared library "/lib/php_mqueue.so"
+
+
 #define _GNU_SOURCE
-#include "mqueue_ffi.h"
+#include "ext/mqueue_ffi.h"
 
 
 mqd_t mq_open(const char *name, int oflag,...);
