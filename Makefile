@@ -8,7 +8,16 @@ ifneq ("$(wildcard $(LIBPHPHI_DIR)/build/common.mk)","")
     include $(LIBPHPHI_DIR)/build/common.mk
 endif
 
+
+
 .PHONY: fetch_libs build build_module clean all
+
+
+fetch_libs:
+	echo -e $(OBJS)
+	@echo -e "\n\n=== Updating submodules...\n"
+	git submodule update --init --remote --recursive libphphi
+	@echo -e "\n=== Submodules updated.\n\n"
 
 build:
 	@echo -e "\n\n=== Building_b libphphi..."

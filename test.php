@@ -1,43 +1,98 @@
 <?php declare(strict_types=1);
 
-require('header.inc');
 
-use zeroshotlabs\php_mqueue\php_mqueue as pmq;
+FFI::load('ext/mqueue_ffi.h');
 
-$pmq_name = '/test_queue';
-$max_size = 1024;
-$max_msg_count = 10;
+$mq = FFI::scope("MQUEUE_FFI");
 
-// public function open( string $name,int $msg_size,int $msg_count,int $rdwr,bool $blocking ): string
+$attr = $mq->new("mq_attr");
 
-
-$mq_parent = new pmq;
-$mq_parent->open($pmq_name,$max_size,$max_msg_count,pmq::O_RDWR,true);
+var_dump($attr);
 
 
-// Create or open the message queue
-$queue = msg_get_queue($queueName, 0644);
-if ($queue === false)
-    exit("Failed to create/open message queue\n");
+// FFI::load('mqueue_ffi.h');  // Header with full path to the .so
+// $mq = FFI::scope("MQUEUE_FFI");
 
-echo "\n\nMessage queue created/opened successfully in PID: ".posix_getpid();
 
-// Send a message
-$message = "Hello, POSIX message queue!";
-if (msg_send($queue, 1, $message, true, false, $errorcode) === false) {
-    echo "Failed to send message. Error code: $errorcode\n";
-} else {
-    echo "Message sent successfully\n";
-}
+// FFI::load('ext/mqueue_ffi.h');
 
-// Receive a message
-$msgtype = 0;
-$maxsize = 1024;
-if (msg_receive($queue, 0, $msgtype, $maxsize, $message, true, MSG_IPC_NOWAIT, $errorcode) === false) {
-    echo "Failed to receive message. Error code: $errorcode\n";
-} else {
-    echo "Received message: $message\n";
-}
+
+// $mq = FFI::scope("MQUEUE_FFI");
+
+// $attr = $mq->new("mq_attr");
+
+// // You can still access the struct members as before
+// $attr->mq_flags = 0;
+// $attr->mq_maxmsg = 10;
+// $attr->mq_msgsize = 8192;
+// $attr->mq_curmsgs = 0;
+
+
+
+
+// require('header.inc');
+
+// use zeroshotlabs\php_mqueue\php_mqueue as pmq;
+
+// $pmq_name = '/test_queue';
+// $max_size = 1024;
+// $max_msg_count = 10;
+
+// // public function open( string $name,int $msg_size,int $msg_count,int $rdwr,bool $blocking ): string
+
+
+// $mq_parent = new pmq;
+// $mq_parent->open($pmq_name,$max_size,$max_msg_count,pmq::O_RDWR,true);
+
+
+// // Create or open the message queue
+// $queue = msg_get_queue($queueName, 0644);
+// if ($queue === false)
+//     exit("Failed to create/open message queue\n");
+
+// echo "\n\nMessage queue created/opened successfully in PID: ".posix_getpid();
+
+// // Send a message
+// $message = "Hello, POSIX message queue!";
+// if (msg_send($queue, 1, $message, true, false, $errorcode) === false) {
+//     echo "Failed to send message. Error code: $errorcode\n";
+// } else {
+//     echo "Message sent successfully\n";
+// }
+
+// // Receive a message
+// $msgtype = 0;
+// $maxsize = 1024;
+// if (msg_receive($queue, 0, $msgtype, $maxsize, $message, true, MSG_IPC_NOWAIT, $errorcode) === false) {
+//     echo "Failed to receive message. Error code: $errorcode\n";
+// } else {
+//     echo "Received message: $message\n";
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
