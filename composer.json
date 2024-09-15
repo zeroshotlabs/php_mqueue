@@ -19,10 +19,10 @@
     ],
     "scripts": {
         "post-install-cmd": [
-            "./clean_build.sh"
+            "bash ./clean_build.sh"
         ],
         "post-update-cmd": [
-            "./clean_build.sh"
+            "bash ./clean_build.sh"
         ]
     },
     "require": {
