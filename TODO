@@ -10,6 +10,10 @@ $attr = $mq->new("mq_attr");
 
 var_dump($attr);
 
+// echo '#define FFI_SCOPE "YOUR_SCOPE"' > header-ffi.h
+// echo '#define FFI_LIB "/path/to/your_lib.so"' >> header-ffi.h
+// cpp -P -C -D"__attribute__(ARGS)=" header_original >> header-ffi.h
+
 
 // FFI::load('mqueue_ffi.h');  // Header with full path to the .so
 // $mq = FFI::scope("MQUEUE_FFI");
