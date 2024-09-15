@@ -36,8 +36,6 @@ class php_mqueue
     {
         $this->_phphi_init();
 
-        $this->hello();
-
         if( $recv_buf_len > 0 )
             $this->recv_buf_len = $recv_buf_len;
 
@@ -46,12 +44,6 @@ class php_mqueue
         $this->ffi = FFI::cdef(file_get_contents(_HOME.'/ext/mqueue_ffi.c'),null);
         // ,_HOME.'/lib/php_mqueue.so:'.'/usr/lib64/librt.so.1'
         //  "librt.so.1:libc.so.6"
-        
-
-
-
-
-
 
         $attr = $this->ffi->new("struct mq_attr");
 

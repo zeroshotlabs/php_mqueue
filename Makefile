@@ -3,10 +3,16 @@ MODULE_NAME = php_mqueue
 
 FINAL_NAME = phphi_mqueue
 
-LIBPHPHI_DIR = libphphi
+LIBPHPHI_DIR = $(wildcard $(zeroshotlabs/libphphi))
 
-include $(LIBPHPHI_DIR)/build.conf
+ifneq ("$(wildcard /build.conf)","")
+    include $(LIBPHPHI_DIR)/build.conf
+endif
 
+
+LIB_PATH = $(LIBPHPHI_DIR)/lib/phphi_mqueue.so
+
+CFLAGS += -DLIB_PATH=\"$(LIB_PATH)\"
 
 .PHONY: all build shared build_lib static clean
 
@@ -28,7 +34,7 @@ shared: build_lib $(MODULE_NAME).so build
 
 build_lib: ${LIBPHPHI_DIR}/${EXT_DIR}/*
 	@echo -e "\n\n=== Pull/build libphphi..."
-	git submodule update --init --remote --recursive $(LIBPHPHI_DIR)
+	git submodule update --init --remote --recursive
 	$(MAKE) -C $(LIBPHPHI_DIR) shared
 
 
