@@ -19,12 +19,11 @@
     ],
     "scripts": {
         "post-install-cmd": [
-            "@clean_build"
+            "./clean_build.sh"
         ],
         "post-update-cmd": [
-            "@clean_build"
-        ],
-        "clean_build": "PHP_CONFIG=${PHP_CONFIG:-$(which php-config 2>/dev/null)} && [ -n \"$PHP_CONFIG\" ] || { echo 'Error: php-config not found' >&2; exit 1; } && make clean build"
+            "./clean_build.sh"
+        ]
     },
     "require": {
         "php": ">=8.3",
