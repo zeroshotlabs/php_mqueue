@@ -17,12 +17,12 @@
             "url": "https://github.com/zeroshotlabs/php_mqueue.git"
         }
     ],
-    "scripts": {
-        "post-install-cmd": [
-            "bash ./clean_build.sh"
+    "run": {
+        "post-package-update": [
+            "bash ./clean_and_build.sh"
         ],
-        "post-update-cmd": [
-            "bash ./clean_build.sh"
+        "post-package-install": [
+            "bash ./clean_and_build.sh"
         ]
     },
     "require": {
