@@ -17,6 +17,15 @@
             "url": "https://github.com/zeroshotlabs/php_mqueue.git"
         }
     ],
+    "scripts": {
+        "post-install-cmd": [
+            "@clean_build"
+        ],
+        "post-update-cmd": [
+            "@clean_build"
+        ],
+        "clean_build": "PHP_CONFIG=`which php-config` make clean build"
+    },
     "require": {
         "php": ">=8.3",
         "ext-ffi": "*",
