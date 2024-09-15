@@ -3,12 +3,11 @@ MODULE_NAME = php_mqueue
 
 FINAL_NAME = phphi_mqueue
 
-LIBPHPHI_DIR = $(wildcard $(zeroshotlabs/libphphi))
+LIBPHPHI_DIR = libphphi
 
-ifneq ("$(wildcard /build.conf)","")
+ifneq ($(wildcard $(LIBPHPHI_DIR)/build.conf),)
     include $(LIBPHPHI_DIR)/build.conf
 endif
-
 
 LIB_PATH = $(LIBPHPHI_DIR)/lib/phphi_mqueue.so
 
@@ -49,6 +48,8 @@ $(LIB_DIR)/%.o: $(EXT_DIR)/%.c
 
 
 clean:
+ifneq ($(LIBPHPHI_DIR),)
 	$(MAKE) -C $(LIBPHPHI_DIR) clean
-	rm -f $(LIB_DIR)/*.o $(LIB_DIR)/*.so $(LIB_DIR)/*.a
+endif
+	rm -f $(LIB_DIR)/*.o $(LIB_DIR)/*.so $(LIB_DIR)/*.aa
 
