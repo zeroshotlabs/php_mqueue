@@ -1,6 +1,6 @@
 {
     "name": "zeroshotlabs/php_mqueue",
-    "description": "Speed-optimized PHP FFI bindings for POSIX message queues",
+    "description": "Speed-optimized PHP FFI bindings for POSIX message queues.",
     "keywords": ["mqueue", "message queue", "posix", "ffi", "binding", "pmq"],
     "license": "gpl-3.0-or-later",
     "homepage": "https://zsl.ai",
@@ -24,13 +24,18 @@
         "post-update-cmd": [
             "@clean_build"
         ],
-        "clean_build": "PHP_CONFIG=`which php-config` make clean build"
+        "clean_build": "PHP_CONFIG=${PHP_CONFIG:-$(which php-config 2>/dev/null)} && [ -n \"$PHP_CONFIG\" ] || { echo 'Error: php-config not found' >&2; exit 1; } && make clean build"
     },
     "require": {
         "php": ">=8.3",
         "ext-ffi": "*",
         "zeroshotlabs/libphphi": "*"
     },
+    "autoload": {
+        "files": [
+            "./header.inc"
+        ]
+    },    
     "minimum-stability": "dev",
     "prefer-stable": true
 }
