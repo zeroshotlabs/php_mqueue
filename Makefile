@@ -19,6 +19,10 @@ CFLAGS += -DLIB_PATH=\"$(LIB_PATH)\"
 all: shared
 
 
+test: all
+	php test.php
+
+
 build: $(OBJS)
 	@echo -e "\n\nMQ USING PHP INC: $(PHP_INCLUDE_DIRS)"
 	@echo -e "\n CFLAGS: $(CFLAGS)"
@@ -31,14 +35,14 @@ build: $(OBJS)
 shared: build_lib $(MODULE_NAME).so build
 
 
-build_lib: ${LIBPHPHI_DIR}/${EXT_DIR}/*
+build_lib: ${LIBPHPHI_DIR}/
 	@echo -e "\n\n=== Pull/build libphphi..."
 	git submodule update --init --remote --recursive
 	$(MAKE) -C $(LIBPHPHI_DIR) shared
 
 
 $(MODULE_NAME).so: $(OBJS) $(LIBPHPHI_DIR)/lib/libphphi.o
-	@echo -e "\n\n=== Building $(MODULE_NAME)..."
+	@echo -e "\n\n=== Building $(MODULE_NAME).so..."
 	$(CC) $(LDFLAGS) -o $(LIB_DIR)/$@ $(OBJS) -ldl -lrt
 
 
