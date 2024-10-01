@@ -1,17 +1,4 @@
-// #define FFI_SCOPE "MQUEUE_FFI"
-// #define FFI_LIB "/root/working/modules/php_mqueue/lib/phphi_mqueue.so"
-// #define FFI_LIB "librt.so.1"
-
-#include <fcntl.h>
-#include <mqueue.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-
-#include <mqueue.h>
-#include "libphphi/ext/libphphi.h"
+// // (C) 2024 Zero Shot Labs, Inc. See LICENSE for details.
 
 
 #ifndef MQUEUE_FFI_H
@@ -20,10 +7,6 @@
 
 #define _GNU_SOURCE
 
-typedef int mqd_t;
-typedef unsigned int mode_t;
-typedef long int ssize_t;
-typedef unsigned long size_t;
 
 
 #define O_RDONLY    00
@@ -34,32 +17,48 @@ typedef unsigned long size_t;
 #define O_NONBLOCK 04000
 
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <mqueue.h>
 
-#endif
+#include "libphphi/ext/libphphi.h"
 
 
 
-mqd_t mq_open(const char *name, int oflag, ...);
+
+extern int errno;
+char *strerror(int errnum);
+
+// #include <fcntl.h>
+// #include <sys/stat.h>
+// #include <sys/types.h>
+// #include <mqueue.h>
+
+// extern mqd_t mq_open(const char *, int, ...);
+
+
+extern mqd_t mq_open( const char *name, int oflag, mode_t mode, struct mq_attr *attr);
+
+
 int mq_close(mqd_t mqdes);
-int mq_unlink(const char *name);
-int mq_getattr(mqd_t mqdes, struct mq_attr *attr);
-int mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr);
 ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio);
 int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio);
-
-
+int mq_getattr(mqd_t mqdes, struct mq_attr *attr);
+int mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr);
 
 // mqd_t mq_open(const char *name, int oflag, ...);
 
-
-// typedef const struct mq_attr {
+// // Ensure mq_attr is fully defined
+// typedef struct mq_attr {
 //     long mq_flags;       /* Flags: 0 or O_NONBLOCK */
-//     long mq_maxmsg;      /* Max. # of messages */
+//     long mq_maxmsg;      /* Max. # of messages on queue */
 //     long mq_msgsize;     /* Max. message size (bytes) */
 //     long mq_curmsgs;     /* # of messages currently in queue */
-// } mq_attr;
+// } mq_attr_t;
 
-
-
+#endif
 
 
