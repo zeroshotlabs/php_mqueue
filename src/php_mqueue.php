@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
-namespace zeroshotlabs\php_mqueue;
+namespace zsl\php_mqueue;
 
 use \Exception;
 use \FFI;
 use \FFI\CData as cdata;
 
-use zeroshotlabs\libphphi\libphphi;
+use zsl\libphphi\c2consts;
+use zsl\libphphi\t_libphphi as tlib;
 
-use function zeroshotlabs\libphphi\plog;
+use function zsl\libphphi\plog;
+
 
 
 /**
@@ -16,37 +18,38 @@ use function zeroshotlabs\libphphi\plog;
 
 
 
-function _phphi_init(): bool
+// function _phphi_init(): bool
+// {
+//     // if( !empty($this->ffi) )
+//     //     throw new Exception("Invalid call");
+
+//     // if( !is_readable($this->libphphi_so))
+//     //     throw new Exception("libphphi.so not readable from '".$this->libphphi_so."'");
+
+//     // if( !empty($this->load_so) )
+//     // {
+//     //     if( !is_readable($this->load_so) )
+//     //         throw new Exception("load_so not readable from '".$this->load_so."'");
+
+//     //     $this->cdef .= "\nvoid c2php_constants_other();";
+
+//     //     error_log("No other FFI loaded through libphphi");
+//     // }
+
+// //        $this->ffi = FFI::cdef($this->_libphphi_cdef,$this->libphphi_so);
+
+//     if( defined('_DEBUG') )
+//         $this->show_limits();
+
+//     return true;
+// }
+
+
+
+class php_mqueue extends c2consts
 {
-    // if( !empty($this->ffi) )
-    //     throw new Exception("Invalid call");
+    use tlib;
 
-    if( !is_readable($this->libphphi_so))
-        throw new Exception("libphphi.so not readable from '".$this->libphphi_so."'");
-
-    // if( !empty($this->load_so) )
-    // {
-    //     if( !is_readable($this->load_so) )
-    //         throw new Exception("load_so not readable from '".$this->load_so."'");
-
-    //     $this->cdef .= "\nvoid c2php_constants_other();";
-
-    //     error_log("No other FFI loaded through libphphi");
-    // }
-
-//        $this->ffi = FFI::cdef($this->_libphphi_cdef,$this->libphphi_so);
-
-    if( defined('_DEBUG') )
-        $this->show_limits();
-
-    return true;
-}
-
-
-
-class php_mqueue
-{
-    use libphphi;
 
     public bool $verbose = false;
     public int $mode = 0666;
@@ -79,49 +82,8 @@ class php_mqueue
         // $this->ffi = FFI::cdef(file_get_contents(_MQ_HOME.'/ext/mqueue_ffi.c'),
         //                         '/root/working/modules/php_mqueue/lib/php_mqueue.so');
         
-        $this->ffi = FFI::cdef("
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <mqueue.h>
-#include <stdlib.h>
-#include <errno.h>
-
-extern int errno;
-char *strerror(int errnum);
-
-typedef int mqd_t;
-typedef unsigned int mode_t;
-// typedef struct mq_attr_ mq_attr;
-
-typedef struct mq_attr {
-    long mq_flags;       /* Flags: 0 or O_NONBLOCK */
-    long mq_maxmsg;      /* Max. # of messages on queue */
-    long mq_msgsize;     /* Max. message size (bytes) */
-    long mq_curmsgs;     /* # of messages currently in queue */
-} mq_attr_t;
- 
-mqd_t mq_open( const char *name, int oflag, mode_t mode, struct mq_attr *attr);
-
-//        mqd_t mq_open(const char *name, int oflag, ...);
-        int mq_close(mqd_t mqdes);
-        int mq_unlink(const char *name);
-        int mq_getattr(mqd_t mqdes, struct mq_attr *attr);
-        int mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr);
-        ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio);
-        int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio);
-        
-
-        
-
-            // typedef unsigned int key_t;
-            // typedef int shmatt_t;
-            // extern int errno;
-            // void *shmat(int shmid, const void *shmaddr, int shmflg);
-            // int shmdt(const void *shmaddr);
-            // int shmget(key_t key, size_t size, int shmflg);
-            // void *memcpy(void *dest, const void *src, size_t n);
-        ");
-
+        $this->ffi = FFI::cdef(file_get_contents(_MQ_HOME.'/ext/mqueue_ffi.h'),
+                                '/root/working/modules/php_mqueue/lib/php_mqueue.so');
 
         // $this->ffi = FFI::cdef(file_get_contents(_MQ_HOME.'/ext/mqueue_ffi.c'),
         //                         '/root/working/modules/php_mqueue/lib/php_mqueue.so');
@@ -130,11 +92,7 @@ mqd_t mq_open( const char *name, int oflag, mode_t mode, struct mq_attr *attr);
 // $attr = $this->ffi->new("struct mq_attr");
 
 
-
-
-        // ,_HOME.'/lib/php_mqueue.so:'.'/usr/lib64/librt.so.1'
-        //  "librt.so.1:libc.so.6"
-
+        $this->set_consts();
 
         $this->recv_buf = $this->ffi->new("char[{$this->recv_buf_len}]");
         $this->recv_buf_addr = FFI::addr($this->recv_buf);
@@ -186,8 +144,6 @@ mqd_t mq_open( const char *name, int oflag, mode_t mode, struct mq_attr *attr);
             return $this->name;
         else
             throw new Exception("Failed to open and set: ".$this->strerror());
-
-        return $this->name;
     }
 
 // 'mq_flags' => $mq_attr->mq_flags,
@@ -320,3 +276,88 @@ mqd_t mq_open( const char *name, int oflag, mode_t mode, struct mq_attr *attr);
     }
 }
 
+
+
+
+
+// $cdef = <<< __EOD__
+// #include <dlfcn.h>
+// #include <errno.h>
+// #include <fcntl.h>
+// #include <stdint.h>
+// #include <string.h>
+// #include <stdlib.h>
+// #include <sys/resource.h>
+// #include <sys/types.h>
+// #include <sys/stat.h>
+// #include "mqueue.h"
+
+// typedef unsigned long rlim_t;
+
+// struct rlimit {
+//     rlim_t rlim_cur;
+//     rlim_t rlim_max;
+// };
+
+// extern int errno;
+// char *strerror(int errnum);
+
+// int setrlimit(int resource, const struct rlimit *rlim);
+// int getrlimit(int resource, struct rlimit *rlim);
+
+
+
+// /* void c2php(void); */
+
+// void c2php_const(const char *name, long value)
+// {
+//     zend_register_long_constant(name, strlen(name), value, CONST_CS | CONST_PERSISTENT, 0);
+// }
+
+
+// void c2php_common_consts()
+// {
+//     c2php_const("RLIM_INFINITY", RLIM_INFINITY);
+//     c2php_const("RLIMIT_MSGQUEUE", RLIMIT_MSGQUEUE);
+//     c2php_const("RLIMIT_NOFILE", RLIMIT_NOFILE);
+//     c2php_const("O_RDONLY", O_RDONLY);
+//     c2php_const("O_WRONLY", O_WRONLY);
+//     c2php_const("O_RDWR", O_RDWR);
+//     c2php_const("O_CREAT", O_CREAT);
+//     c2php_const("O_EXCL", O_EXCL);
+//     c2php_const("O_NONBLOCK", O_NONBLOCK);
+// }
+
+
+
+// typedef int mqd_t;
+// typedef unsigned int mode_t;
+// // typedef struct mq_attr_ mq_attr;
+
+// typedef struct mq_attr {
+//     long mq_flags;       /* Flags: 0 or O_NONBLOCK */
+//     long mq_maxmsg;      /* Max. # of messages on queue */
+//     long mq_msgsize;     /* Max. message size (bytes) */
+//     long mq_curmsgs;     /* # of messages currently in queue */
+// } mq_attr_t;
+ 
+//         mqd_t mq_open( const char *name, int oflag, mode_t mode, struct mq_attr *attr);
+
+// //        mqd_t mq_open(const char *name, int oflag, ...);
+//         int mq_close(mqd_t mqdes);
+//         int mq_unlink(const char *name);
+//         int mq_getattr(mqd_t mqdes, struct mq_attr *attr);
+//         int mq_setattr(mqd_t mqdes, const struct mq_attr *newattr, struct mq_attr *oldattr);
+//         ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio);
+//         int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio);
+        
+
+//             // typedef unsigned int key_t;
+//             // typedef int shmatt_t;
+//             // extern int errno;
+//             // void *shmat(int shmid, const void *shmaddr, int shmflg);
+//             // int shmdt(const void *shmaddr);
+//             // int shmget(key_t key, size_t size, int shmflg);
+//             // void *memcpy(void *dest, const void *src, size_t n);
+
+// __EOD__;
